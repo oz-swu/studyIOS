@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol PageTitleViewDelegate : class {
+    func pageTitleView(titleView : PageTitleView, selectedIndex index : Int)
+}
+
 private let kScrollLineH : CGFloat = 2;
 
 class PageTitleView: UIView {
@@ -20,6 +24,10 @@ class PageTitleView: UIView {
     }
     */
 
+    weak var delegate : PageTitleViewDelegate?;
+    
+    open var currentIndex : Int = 0;
+    
     open var titles : [String];
     
     open lazy var titleLabels : [UILabel] = [UILabel]();
@@ -106,6 +114,25 @@ extension PageTitleView {
 
 extension PageTitleView {
     @objc open func titleLabelClick(tapGes: UITapGestureRecognizer) {
-        let tapLabel = tapGes.view;
+        guard let tapLabel = tapGes.view as? UILabel else { return };
+        
+        if (tapLabel.tag == currentIndex) {
+            return
+        }
+        
+        let preLabel = titleLabels[currentIndex];
+        
+        currentIndex = tapLabel.tag;
+        
+        preLabel.textColor = UIColor.darkGray;
+        tapLabel.textColor = UIColor.orange;
+        
+        let scrollLineX = CGFloat(currentIndex) * scrollLine.frame.width;
+        
+        UIView.animate(withDuration: 0.15, animations: {
+            self.scrollLine.frame.origin.x = scrollLineX;
+        })
+        
+        delegate?.pageTitleView(titleView: self, selectedIndex: currentIndex);
     }
 }
