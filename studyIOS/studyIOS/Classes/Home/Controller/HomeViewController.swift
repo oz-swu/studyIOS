@@ -23,10 +23,11 @@ class HomeViewController: UIViewController {
     
     open lazy var pageContentView : PageContentView = {[weak self] in
         let contentY = kStatusBarH + kNavigationBarH + kTitleViewH;
-        let contentFrame = CGRect(x: 0, y: contentY, width: kScreenW, height: kScreenH - contentY);
+        let contentFrame = CGRect(x: 0, y: contentY, width: kScreenW, height: kScreenH - contentY - kTabbarH);
         
         var childVcs = [UIViewController]();
-        for _ in 0..<4 {
+        childVcs.append(RecommendViewController());
+        for _ in 0..<3 {
             let vc = UIViewController();
             vc.view.backgroundColor = UIColor(r: arc4random_float(255), g: arc4random_float(255), b: arc4random_float(255));
             childVcs.append(vc);

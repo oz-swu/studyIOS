@@ -22,6 +22,7 @@
 		80411CCE1EF674DA004C1C38 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80411CCD1EF674DA004C1C38 /* Common.swift */; };
 		80411CD01EF68260004C1C38 /* PageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80411CCF1EF68260004C1C38 /* PageContentView.swift */; };
 		80411CD21EF68C97004C1C38 /* UIColor-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80411CD11EF68C97004C1C38 /* UIColor-Extension.swift */; };
+		80F4E4CB1EFA6DAC004D26DE /* RecommendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4E4CA1EFA6DAC004D26DE /* RecommendViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		80411CCD1EF674DA004C1C38 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		80411CCF1EF68260004C1C38 /* PageContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageContentView.swift; sourceTree = "<group>"; };
 		80411CD11EF68C97004C1C38 /* UIColor-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor-Extension.swift"; sourceTree = "<group>"; };
+		80F4E4CA1EFA6DAC004D26DE /* RecommendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				80411CC61EF3CCC2004C1C38 /* HomeViewController.swift */,
+				80F4E4CA1EFA6DAC004D26DE /* RecommendViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 			files = (
 				80411C7E1EF28844004C1C38 /* AppDelegate.swift in Sources */,
 				80411CD21EF68C97004C1C38 /* UIColor-Extension.swift in Sources */,
+				80F4E4CB1EFA6DAC004D26DE /* RecommendViewController.swift in Sources */,
 				80411CC51EF3CC09004C1C38 /* MainViewController.swift in Sources */,
 				80411CCC1EF671AB004C1C38 /* PageTitleView.swift in Sources */,
 				80411CD01EF68260004C1C38 /* PageContentView.swift in Sources */,
