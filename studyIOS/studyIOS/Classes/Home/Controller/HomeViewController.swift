@@ -33,6 +33,8 @@ class HomeViewController: UIViewController {
         }
         
         let contentView = PageContentView(frame: contentFrame, childVcs: childVcs, parentViewController: self);
+        contentView.delegate = self;
+        
         return contentView;
     }();
     
@@ -96,3 +98,8 @@ extension HomeViewController : PageTitleViewDelegate {
     }
 }
 
+extension HomeViewController : PageContentViewDelegate {
+    func pageContentView(contentView: PageContentView, progress: CGFloat, source: Int, target: Int) {
+        pageTitleView.moveScrollLine(progress: progress, source: source, target: target);
+    }
+}

@@ -13,6 +13,8 @@ protocol PageTitleViewDelegate : class {
 }
 
 private let kScrollLineH : CGFloat = 2;
+private let kNormalColor : (CGFloat, CGFloat, CGFloat) = (85, 85, 85);
+private let kSelectedColor : (CGFloat, CGFloat, CGFloat) = (255, 128, 0);
 
 class PageTitleView: UIView {
 
@@ -25,6 +27,7 @@ class PageTitleView: UIView {
     */
 
     weak var delegate : PageTitleViewDelegate?;
+    open var doDelegate : Bool = true;
     
     open var currentIndex : Int = 0;
     
@@ -60,6 +63,7 @@ class PageTitleView: UIView {
     }
 }
 
+// MARK: setup UI
 extension PageTitleView {
     
     open func setupUI() {
@@ -112,27 +116,53 @@ extension PageTitleView {
     }
 }
 
+// MARK: listening label click
 extension PageTitleView {
     @objc open func titleLabelClick(tapGes: UITapGestureRecognizer) {
-        guard let tapLabel = tapGes.view as? UILabel else { return };
+        if (doDelegate) {
+            guard let tapLabel = tapGes.view as? UILabel else { return };
         
-        if (tapLabel.tag == currentIndex) {
-            return
+            if (tapLabel.tag == currentIndex) {
+                return
+            }
+        
+            let preLabel = titleLabels[currentIndex];
+        
+            currentIndex = tapLabel.tag;
+        
+            preLabel.textColor = UIColor.darkGray;
+            tapLabel.textColor = UIColor.orange;
+        
+            let scrollLineX = CGFloat(currentIndex) * scrollLine.frame.width;
+        
+            UIView.animate(withDuration: 0.15, animations: {
+                self.scrollLine.frame.origin.x = scrollLineX;
+            })
+        
+            delegate?.pageTitleView(titleView: self, selectedIndex: currentIndex);
         }
+    }
+}
+
+// MARK: move scroll line
+extension PageTitleView {
+    func moveScrollLine(progress: CGFloat, source: Int, target: Int) {
+        doDelegate = false;
         
-        let preLabel = titleLabels[currentIndex];
+        let sourceLabel = titleLabels[source];
+        let targetLabel = titleLabels[target];
         
-        currentIndex = tapLabel.tag;
+        let offsetX = (targetLabel.frame.origin.x - sourceLabel.frame.origin.x) * progress;
+        scrollLine.frame.origin.x = sourceLabel.frame.origin.x + offsetX;
         
-        preLabel.textColor = UIColor.darkGray;
-        tapLabel.textColor = UIColor.orange;
+        let colorDelta = (kSelectedColor.0 - kNormalColor.0, kSelectedColor.1 - kNormalColor.1, kSelectedColor.2 - kNormalColor.2);
         
-        let scrollLineX = CGFloat(currentIndex) * scrollLine.frame.width;
+        targetLabel.textColor = UIColor(r: kNormalColor.0 + colorDelta.0 * progress, g: kNormalColor.1 + colorDelta.1 * progress, b: kNormalColor.2 + colorDelta.2 * progress);
         
-        UIView.animate(withDuration: 0.15, animations: {
-            self.scrollLine.frame.origin.x = scrollLineX;
-        })
+        sourceLabel.textColor = UIColor(r: kSelectedColor.0 - colorDelta.0 * progress, g: kSelectedColor.1 - colorDelta.1 * progress, b: kSelectedColor.2 - colorDelta.2 * progress);
         
-        delegate?.pageTitleView(titleView: self, selectedIndex: currentIndex);
+        currentIndex = target;
+        
+        doDelegate = true;
     }
 }

@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol PageContentViewDelegate : class {
+    func pageContentView(contentView: PageContentView, progress: CGFloat, source: Int, target: Int);
+}
 private let ContentCellId = "ContentCellId";
 
 class PageContentView: UIView {
@@ -23,6 +26,9 @@ class PageContentView: UIView {
     open var childVcs : [UIViewController];
     open weak var parentViewController: UIViewController?;
     
+    weak var delegate: PageContentViewDelegate?;
+    open var doDelegate : Bool = true;
+    
     open lazy var collectionView: UICollectionView = {[weak self] in
         let layout = UICollectionViewFlowLayout();
         layout.itemSize = (self?.bounds.size)!;
@@ -35,10 +41,13 @@ class PageContentView: UIView {
         collectionView.isPagingEnabled = true;
         collectionView.bounces = false;
         collectionView.dataSource = self;
+        collectionView.delegate = self;
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: ContentCellId)
         
         return collectionView;
     }();
+    
+    open var startDragX : CGFloat = 0;
     
     // MRAK:- init
     init(frame: CGRect, childVcs: [UIViewController], parentViewController : UIViewController?) {
@@ -89,9 +98,46 @@ extension PageContentView : UICollectionViewDataSource {
     }
 }
 
+extension PageContentView : UICollectionViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        startDragX = scrollView.contentOffset.x;
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (doDelegate) {
+            var progress : CGFloat = 0;
+            var sourceIndex : Int = 0;
+            var targetIndex : Int = 0;
+        
+            let currentDragX = scrollView.contentOffset.x;
+            let scrollViewW = scrollView.bounds.width;
+        
+            sourceIndex = Int(startDragX / scrollViewW);
+        
+            if (currentDragX > startDragX) {
+                targetIndex = sourceIndex + 1;
+                progress = currentDragX / scrollViewW - CGFloat(sourceIndex);
+            } else if (currentDragX < startDragX) {
+                targetIndex = sourceIndex - 1;
+                progress = CGFloat(sourceIndex) - currentDragX / scrollViewW;
+            } else {
+                targetIndex = sourceIndex;
+                progress = 0;
+            }
+        
+            print("progress:", progress, " sourceIndex:", sourceIndex, " targetIndex:", targetIndex);
+        
+            delegate?.pageContentView(contentView: self, progress: progress, source: sourceIndex, target: targetIndex);
+        }
+    }
+}
+
 extension PageContentView {
     func setCurrentIndex(currentIndex : Int) {
+        doDelegate = false;
         let offsetX = CGFloat(currentIndex) * collectionView.frame.width;
         collectionView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: false);
+        doDelegate = true;
     }
 }
