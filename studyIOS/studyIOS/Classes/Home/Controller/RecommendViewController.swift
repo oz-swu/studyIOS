@@ -10,10 +10,12 @@ import UIKit
 
 private let kItemMargin : CGFloat = 10;
 private let kItemW : CGFloat = (kScreenW - 3 * kItemMargin) / 2;
-private let kItemH : CGFloat = kItemW * 3 / 4;
+private let kNormalItemH : CGFloat = kItemW * 3 / 4;
+private let kPrettyItemH : CGFloat = kItemW * 4 / 3;
 private let kHeaderH : CGFloat = 50;
 
 private let kNormalCellId = "kNormalCellId";
+private let kPrettyCellId = "kPrettyCellId";
 private let kHeaderId = "kHeaderId";
 
 class RecommendViewController: UIViewController {
@@ -21,16 +23,19 @@ class RecommendViewController: UIViewController {
     lazy var collectionView : UICollectionView = {[weak self] in
         let viewLayout = UICollectionViewFlowLayout();
         viewLayout.headerReferenceSize = CGSize(width: kScreenW, height: kHeaderH);
-        viewLayout.itemSize = CGSize(width: kItemW, height: kItemH);
+//        viewLayout.itemSize = CGSize(width: kItemW, height: kNormalItemH);
         viewLayout.minimumLineSpacing = 0;
         viewLayout.minimumInteritemSpacing = kItemMargin;
         viewLayout.sectionInset = UIEdgeInsets(top: 0, left: kItemMargin, bottom: 0, right: kItemMargin);
         
         let collectionView = UICollectionView(frame: (self?.view.bounds)!, collectionViewLayout: viewLayout);
         collectionView.dataSource = self;
+        collectionView.delegate = self;
         collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth];
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: kNormalCellId);
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: kHeaderId);
+        collectionView.register(UINib(nibName: "CollectionNormalCell", bundle: nil), forCellWithReuseIdentifier: kNormalCellId);
+        collectionView.register(UINib(nibName: "CollectionPrettyCell", bundle: nil), forCellWithReuseIdentifier: kPrettyCellId);
+        collectionView.register(UINib(nibName: "CollectionHeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: kHeaderId)
+        collectionView.backgroundColor = .white;
         
         return collectionView;
     }();
@@ -40,6 +45,7 @@ class RecommendViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         setupUI();
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -83,14 +89,28 @@ extension RecommendViewController : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kHeaderId, for: indexPath);
-        header.backgroundColor = UIColor.white;
+//        header.backgroundColor = UIColor.white;
         
         return header;
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kNormalCellId, for: indexPath);
-        cell.backgroundColor = UIColor(r: arc4random_float(255), g: arc4random_float(255), b: arc4random_float(255));
+        var cellId = kNormalCellId;
+        if (indexPath.section == 1) {
+            cellId = kPrettyCellId;
+        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath);
+//        cell.backgroundColor = UIColor(r: arc4random_float(255), g: arc4random_float(255), b: arc4random_float(255));
         return cell;
     }
 }
 
+// MRA: - delegate flow layout
+extension RecommendViewController : UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if (indexPath.section == 1) {
+            return CGSize(width: kItemW, height: kPrettyItemH);
+        }
+        
+        return CGSize(width: kItemW, height: kNormalItemH);
+    }
+}
