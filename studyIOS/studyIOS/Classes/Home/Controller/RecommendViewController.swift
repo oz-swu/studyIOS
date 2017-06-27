@@ -20,6 +20,8 @@ private let kHeaderId = "kHeaderId";
 
 class RecommendViewController: UIViewController {
 
+    lazy var recommendViewModel : RecommendViewModel = RecommendViewModel();
+    
     lazy var collectionView : UICollectionView = {[weak self] in
         let viewLayout = UICollectionViewFlowLayout();
         viewLayout.headerReferenceSize = CGSize(width: kScreenW, height: kHeaderH);
@@ -46,6 +48,7 @@ class RecommendViewController: UIViewController {
         // Do any additional setup after loading the view.
         setupUI();
 
+        loadData();
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,33 +76,44 @@ extension RecommendViewController {
     }
 }
 
+// MRAK: - load data
+extension RecommendViewController {
+    func loadData() {
+        recommendViewModel.requestData {
+            self.collectionView.reloadData();
+        }
+    }
+}
+
 // MRAK: - data source
 extension RecommendViewController : UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 12;
+        return recommendViewModel.anchorGroups.count;
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (section == 0) {
-            return 8;
-        } else {
-            return 4;
-        }
+        return recommendViewModel.anchorGroups[section].anchors.count;
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kHeaderId, for: indexPath);
-//        header.backgroundColor = UIColor.white;
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kHeaderId, for: indexPath) as! CollectionHeaderView;
+
+        header.group = recommendViewModel.anchorGroups[indexPath.section];
         
         return header;
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let group = recommendViewModel.anchorGroups[indexPath.section];
+        let anchor = group.anchors[indexPath.row];
+        
         var cellId = kNormalCellId;
-        if (indexPath.section == 1) {
+        if (anchor.isVertical == "1") {
             cellId = kPrettyCellId;
         }
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath);
-//        cell.backgroundColor = UIColor(r: arc4random_float(255), g: arc4random_float(255), b: arc4random_float(255));
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CollectionBaseCell;
+        
+        cell.anchor = anchor;
+
         return cell;
     }
 }
@@ -107,7 +121,8 @@ extension RecommendViewController : UICollectionViewDataSource {
 // MRA: - delegate flow layout
 extension RecommendViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if (indexPath.section == 1) {
+        if (recommendViewModel.anchorGroups[indexPath.section].anchors[indexPath.row].isVertical == "1") {
+//        if (indexPath.section == 1) {
             return CGSize(width: kItemW, height: kPrettyItemH);
         }
         

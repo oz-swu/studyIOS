@@ -18,3 +18,11 @@ let kScreenH = UIScreen.main.bounds.height;
 public func arc4random_float(_ u: UInt32) -> CGFloat {
     return CGFloat(arc4random_uniform(u));
 }
+
+public func stringConvertor(_ v: Any?) -> String {
+    guard v is String else {
+        return String(v as! Int);
+    }
+    
+    return v as! String;
+}

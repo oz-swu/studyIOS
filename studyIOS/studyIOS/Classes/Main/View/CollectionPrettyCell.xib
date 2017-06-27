@@ -18,7 +18,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="250" height="308"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Khw-iC-nsX">
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Khw-iC-nsX">
                         <rect key="frame" x="0.0" y="284" width="47" height="14"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="14" id="dCV-Wd-LQe"/>
@@ -46,38 +46,45 @@
                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                         </userDefinedRuntimeAttributes>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ieA-4k-kf7">
-                        <rect key="frame" x="195" y="5" width="50" height="21"/>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.30457746478873238" colorSpace="custom" customColorSpace="sRGB"/>
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="afT-tb-FvZ">
+                        <rect key="frame" x="185" y="5" width="60" height="18"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.24980743838028169" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="50" id="Am6-uR-N6n"/>
-                            <constraint firstAttribute="height" constant="21" id="JXL-xI-NQg"/>
+                            <constraint firstAttribute="height" constant="18" id="cl1-vB-VfY"/>
+                            <constraint firstAttribute="width" constant="60" id="vJI-sY-ZoJ"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <nil key="highlightedColor"/>
+                        <state key="normal" title="Button">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                 <integer key="value" value="3"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                         </userDefinedRuntimeAttributes>
-                    </label>
+                    </button>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="afT-tb-FvZ" secondAttribute="trailing" constant="5" id="36Q-Lq-AUJ"/>
                 <constraint firstItem="PZI-eD-Lt4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="F08-A6-yvx"/>
                 <constraint firstAttribute="trailing" secondItem="XoC-Ae-lxx" secondAttribute="trailing" id="Lm2-G8-yXx"/>
                 <constraint firstItem="Khw-iC-nsX" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="NXR-eK-HJ4"/>
                 <constraint firstItem="XoC-Ae-lxx" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="WAf-Rb-qMZ"/>
-                <constraint firstAttribute="trailing" secondItem="ieA-4k-kf7" secondAttribute="trailing" constant="5" id="bXc-hv-2He"/>
                 <constraint firstItem="XoC-Ae-lxx" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="cSU-bW-xMi"/>
                 <constraint firstItem="PZI-eD-Lt4" firstAttribute="top" secondItem="XoC-Ae-lxx" secondAttribute="bottom" constant="5" id="eeP-B3-J34"/>
+                <constraint firstItem="afT-tb-FvZ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="lfS-Pc-8LO"/>
                 <constraint firstAttribute="bottom" secondItem="Khw-iC-nsX" secondAttribute="bottom" constant="10" id="nnU-vb-vE9"/>
-                <constraint firstItem="ieA-4k-kf7" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="v3p-YQ-zMS"/>
                 <constraint firstItem="Khw-iC-nsX" firstAttribute="top" secondItem="PZI-eD-Lt4" secondAttribute="bottom" constant="5" id="vlo-cZ-OfW"/>
             </constraints>
             <size key="customSize" width="250" height="308"/>
+            <connections>
+                <outlet property="anchorCity" destination="Khw-iC-nsX" id="JzR-Xu-Tr7"/>
+                <outlet property="anchorName" destination="PZI-eD-Lt4" id="XWe-g4-XDe"/>
+                <outlet property="onlineNum" destination="afT-tb-FvZ" id="dRF-rn-svf"/>
+                <outlet property="roomImg" destination="XoC-Ae-lxx" id="3Wq-pr-Qhf"/>
+            </connections>
             <point key="canvasLocation" x="16" y="54"/>
         </collectionViewCell>
     </objects>

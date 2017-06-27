@@ -46,7 +46,7 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bhJ-IU-Dh1">
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bhJ-IU-Dh1">
                         <rect key="frame" x="206" y="117" width="51" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <state key="normal" title="Button" image="Image_online">
@@ -70,6 +70,12 @@
                 <constraint firstItem="W3N-Fe-UfZ" firstAttribute="leading" secondItem="GNR-g3-RKd" secondAttribute="leading" constant="5" id="wAO-4d-6zK"/>
             </constraints>
             <size key="customSize" width="262" height="167"/>
+            <connections>
+                <outlet property="anchorName" destination="W3N-Fe-UfZ" id="dhg-Tr-sJ2"/>
+                <outlet property="onlineNum" destination="bhJ-IU-Dh1" id="F1J-ut-dCL"/>
+                <outlet property="roomImg" destination="GNR-g3-RKd" id="6RZ-NJ-x84"/>
+                <outlet property="roomName" destination="P2g-Xi-yTS" id="uWU-mT-xjE"/>
+            </connections>
             <point key="canvasLocation" x="24" y="35"/>
         </collectionViewCell>
     </objects>
