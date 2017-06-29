@@ -28,7 +28,7 @@ class RecommendCycleView: UIView {
         
         autoresizingMask = [];
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: kCycleCellId);
+        collectionView.register(UINib(nibName: "CollectionCycleCell", bundle: nil), forCellWithReuseIdentifier: kCycleCellId);
         
     }
     
@@ -54,10 +54,19 @@ extension RecommendCycleView : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCycleCellId, for: indexPath);
+        print(indexPath.section, indexPath.row, indexPath.item);
+        let cycleModel = data![indexPath.item];
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCycleCellId, for: indexPath) as! CollectionCycleCell;
         
-        cell.backgroundColor = indexPath.item % 2 == 0 ? UIColor.red : UIColor.blue;
+        cell.imageView.kf.setImage(with: URL(string: cycleModel.pic_url));
         
         return cell
+    }
+}
+
+extension RecommendCycleView : UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let x = scrollView.contentOffset.x;
+        pageControl.currentPage = Int(x / scrollView.bounds.width);
     }
 }
