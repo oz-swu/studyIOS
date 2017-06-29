@@ -12,6 +12,7 @@ class RecommendViewModel {
 
     lazy var anchorGroups : [AnchorGroup] = [AnchorGroup]();
     
+    lazy var cycleData : [CycleModel] = [CycleModel]();
 }
 
 // MARK: - sent request
@@ -23,6 +24,15 @@ extension RecommendViewModel {
             guard result is [String : NSObject] else {
                 print("no home data");
                 return;
+            }
+            
+            guard let cycleList = result["banner"] as? [[String : NSObject]] else {
+                print("no banner data");
+                return;
+            }
+            
+            for cycle in cycleList {
+                self.cycleData.append(CycleModel(cycle));
             }
             
             guard let hotGroups = result["hotList"] as? [[String : NSObject]] else {

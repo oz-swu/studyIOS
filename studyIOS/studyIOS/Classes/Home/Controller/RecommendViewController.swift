@@ -14,6 +14,8 @@ private let kNormalItemH : CGFloat = kItemW * 3 / 4;
 private let kPrettyItemH : CGFloat = kItemW * 4 / 3;
 private let kHeaderH : CGFloat = 50;
 
+private let kCycleViewH : CGFloat = kScreenW * 3 / 8;
+
 private let kNormalCellId = "kNormalCellId";
 private let kPrettyCellId = "kPrettyCellId";
 private let kHeaderId = "kHeaderId";
@@ -38,13 +40,20 @@ class RecommendViewController: UIViewController {
         collectionView.register(UINib(nibName: "CollectionPrettyCell", bundle: nil), forCellWithReuseIdentifier: kPrettyCellId);
         collectionView.register(UINib(nibName: "CollectionHeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: kHeaderId)
         collectionView.backgroundColor = .white;
+        collectionView.contentInset = UIEdgeInsets(top: kCycleViewH, left: 0, bottom: 0, right: 0);
         
         return collectionView;
     }();
     
+    lazy var cycleView : RecommendCycleView = {
+        let cycleView = RecommendCycleView.instance();
+        cycleView.frame = CGRect(x: 0, y: -kCycleViewH, width: kScreenW, height: kCycleViewH);
+        return cycleView;
+    }();
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         setupUI();
 
@@ -73,6 +82,8 @@ class RecommendViewController: UIViewController {
 extension RecommendViewController {
     func setupUI() {
         view.addSubview(collectionView);
+        
+        collectionView.addSubview(cycleView);
     }
 }
 
@@ -81,6 +92,8 @@ extension RecommendViewController {
     func loadData() {
         recommendViewModel.requestData {
             self.collectionView.reloadData();
+            
+            self.cycleView.data = self.recommendViewModel.cycleData;
         }
     }
 }
@@ -102,9 +115,10 @@ extension RecommendViewController : UICollectionViewDataSource {
         
         return header;
     }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let group = recommendViewModel.anchorGroups[indexPath.section];
-        let anchor = group.anchors[indexPath.row];
+        let anchor = group.anchors[indexPath.item];
         
         var cellId = kNormalCellId;
         if (anchor.isVertical == "1") {
@@ -113,7 +127,7 @@ extension RecommendViewController : UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CollectionBaseCell;
         
         cell.anchor = anchor;
-
+        
         return cell;
     }
 }
@@ -121,7 +135,7 @@ extension RecommendViewController : UICollectionViewDataSource {
 // MRA: - delegate flow layout
 extension RecommendViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if (recommendViewModel.anchorGroups[indexPath.section].anchors[indexPath.row].isVertical == "1") {
+        if (recommendViewModel.anchorGroups[indexPath.section].anchors[indexPath.item].isVertical == "1") {
 //        if (indexPath.section == 1) {
             return CGSize(width: kItemW, height: kPrettyItemH);
         }
