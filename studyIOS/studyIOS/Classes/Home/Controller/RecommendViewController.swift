@@ -15,6 +15,7 @@ private let kPrettyItemH : CGFloat = kItemW * 4 / 3;
 private let kHeaderH : CGFloat = 50;
 
 private let kCycleViewH : CGFloat = kScreenW * 3 / 8;
+private let kCategoryViewH : CGFloat = 90;
 
 private let kNormalCellId = "kNormalCellId";
 private let kPrettyCellId = "kPrettyCellId";
@@ -40,15 +41,21 @@ class RecommendViewController: UIViewController {
         collectionView.register(UINib(nibName: "CollectionPrettyCell", bundle: nil), forCellWithReuseIdentifier: kPrettyCellId);
         collectionView.register(UINib(nibName: "CollectionHeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: kHeaderId)
         collectionView.backgroundColor = .white;
-        collectionView.contentInset = UIEdgeInsets(top: kCycleViewH, left: 0, bottom: 0, right: 0);
+        collectionView.contentInset = UIEdgeInsets(top: kCycleViewH + kCategoryViewH, left: 0, bottom: 0, right: 0);
         
         return collectionView;
     }();
     
     lazy var cycleView : RecommendCycleView = {
         let cycleView = RecommendCycleView.instance();
-        cycleView.frame = CGRect(x: 0, y: -kCycleViewH, width: kScreenW, height: kCycleViewH);
+        cycleView.frame = CGRect(x: 0, y: -kCycleViewH-kCategoryViewH, width: kScreenW, height: kCycleViewH);
         return cycleView;
+    }();
+    
+    lazy var categoryView : RecommendCategoryView = {
+        let categoryView = RecommendCategoryView.instance();
+        categoryView.frame = CGRect(x: 0, y: -kCategoryViewH, width: kScreenW, height: kCategoryViewH)
+        return categoryView;
     }();
     
     override func viewDidLoad() {
@@ -84,6 +91,7 @@ extension RecommendViewController {
         view.addSubview(collectionView);
         
         collectionView.addSubview(cycleView);
+        collectionView.addSubview(categoryView);
     }
 }
 
@@ -94,6 +102,10 @@ extension RecommendViewController {
             self.collectionView.reloadData();
             
             self.cycleView.data = self.recommendViewModel.cycleData;
+        }
+
+        recommendViewModel.requestCategory {
+            self.categoryView.data = self.recommendViewModel.categoryData;
         }
     }
 }
