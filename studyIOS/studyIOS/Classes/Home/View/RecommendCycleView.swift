@@ -12,12 +12,21 @@ private let kCycleCellId = "kCycleCellId";
 
 class RecommendCycleView: UIView {
     
+    var cycleTimer : Timer?;
+    
     var data : [CycleModel]? {
         didSet {
             collectionView.reloadData();
-            pageControl.numberOfPages = data?.count ?? 0;
+            dataCount = data?.count ?? 0;
+            pageControl.numberOfPages = dataCount;
+            let indexPath = IndexPath(item: dataCount * Int(5000 / dataCount), section: 0);
+            collectionView.scrollToItem(at: indexPath, at: .left, animated: false);
+            
+            removeCycleTimer();
+            addCycleTimer();
         }
     };
+    var dataCount : Int = 0;
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -48,14 +57,11 @@ extension RecommendCycleView {
 
 extension RecommendCycleView : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data?.count ?? 0;
-//        return 6
+        return (dataCount == 0) ? 0 : (dataCount + 10000);
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        print(indexPath.section, indexPath.row, indexPath.item);
-        let cycleModel = data![indexPath.item];
+        let cycleModel = data![indexPath.item % dataCount];
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCycleCellId, for: indexPath) as! CollectionCycleCell;
         
         cell.imageView.kf.setImage(with: URL(string: cycleModel.pic_url));
@@ -66,7 +72,32 @@ extension RecommendCycleView : UICollectionViewDataSource {
 
 extension RecommendCycleView : UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let x = scrollView.contentOffset.x;
-        pageControl.currentPage = Int(x / scrollView.bounds.width);
+        let x = scrollView.contentOffset.x + scrollView.bounds.width * 0.5;
+        pageControl.currentPage = Int(x / scrollView.bounds.width) % (dataCount);
+    }
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        removeCycleTimer();
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        addCycleTimer();
+    }
+}
+
+extension RecommendCycleView {
+    func addCycleTimer() {
+        cycleTimer = Timer(timeInterval: 3, target: self, selector: #selector(scrollToNext), userInfo: nil, repeats: true);
+        RunLoop.main.add(cycleTimer!, forMode: .commonModes);
+    }
+    
+    func removeCycleTimer() {
+        cycleTimer?.invalidate();
+        cycleTimer = nil;
+    }
+    
+    @objc private func scrollToNext() {
+        let currentX = collectionView.contentOffset.x;
+        let nextX = currentX + collectionView.bounds.width;
+        
+        collectionView.setContentOffset(CGPoint(x: nextX, y: 0), animated: true);
     }
 }
